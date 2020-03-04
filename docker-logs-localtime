@@ -1,0 +1,22 @@
+#!/bin/sh
+# replace all UTC dates to local dates in pipe
+# by HuangYingNing <huangyingning at google mail system>
+# install:
+# git clone https://github.com/HuangYingNing/docker-logs-localtime.git /usr/local/docker-logs-localtime && ln -s /usr/local/docker-logs-localtime/docker-logs-localtime /usr/local/bin/docker-logs-localtime && chmod +x /usr/local/docker-logs-localtime/docker-logs-localtime /usr/local/bin/docker-logs-localtime
+# or:
+# wget -O /usr/local/bin/docker-logs-localtime https://raw.githubusercontent.com/HuangYingNing/docker-logs-localtime/master/docker-logs-localtime && chmod +x /usr/local/bin/docker-logs-localtime
+# usage: docker logs -t container_name 2>&1 | docker-logs-localtime
+
+date_prefix=`date +%Y`-
+
+while read -r dateUtc log
+do
+	if [ "${dateUtc:0:5}" == ${date_prefix} ]; then
+		# 2020-03-04T09:38:58.836294000Z
+		dateLocal=`date -d "UTC ${dateUtc:0:4}${dateUtc:5:2}${dateUtc:8:2} ${dateUtc:11:8}" '+%Y-%m-%d %H:%M:%S'`${dateUtc:19:9}
+#		echo "local date is ${dateLocal} Utc date is ${dateUtc}"
+		echo ${dateLocal} ${log}
+	else
+		echo ${dateUtc} ${log}
+	fi
+done
