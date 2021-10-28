@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # replace all UTC dates to local dates in pipe
 # by HuangYingNing <huangyingning at google mail system>
 # install:
